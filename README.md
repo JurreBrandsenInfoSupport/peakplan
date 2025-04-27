@@ -5,8 +5,8 @@ Please follow the instructions below to edit the code in this repository.
 
 ## Features
 
-- Manage tasks for your daily tasks
-- Manage projects and associated tasks
+- Manage your daily tasks
+- Manage your long-term projects
 - Get automatic reminders in via e-mail
 
 ## Development setup
