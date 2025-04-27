@@ -1,0 +1,21 @@
+services:
+  database:
+    container_name: database
+    image: postgres:17
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - ./.env
+  webapp:
+    container_name: webapp
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ..:/workspace:cached
+    command: /bin/sh -c "while sleep 1000; do :; done"
+    user: vscode
+    env_file:
+      - ./.env
+volumes:
+  postgres_data:
