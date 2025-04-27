@@ -42,8 +42,60 @@ class TasksController < ApplicationController
         @task = Task.new(task_params)
         @task.owner = current_user
 
+        if params[:project_id].present?
+            @task.project_id = params[:project_id]
+        end
+
         if @task.save
             render json: @task, status: :created
+        else
+            render json: { errors: @task.errors.full_messages }, status: :unprocessable_entity
+        end
+    end
+
+    def update
+        @task = Task.find(params[:id])
+
+        # Ensure user can only update their own tasks
+        unless @task.owner == current_user
+            return render json: { error: "Unauthorized" }, status: :forbidden
+        end
+
+        if params[:project_id].present?
+            @project = Project.find(params[:project_id])
+
+            # Ensure the task belongs to the specified project
+            unless @task.project_id == @project.id
+                return render json: { error: "Task does not belong to this project" }, status: :unprocessable_entity
+            end
+        end
+
+        if @task.update(update_task_params)
+            render json: @task, status: :ok
+        else
+            render json: { errors: @task.errors.full_messages }, status: :unprocessable_entity
+        end
+    end
+
+    def destroy
+        @task = Task.find(params[:id])
+
+        # Ensure user can only remove their own tasks
+        unless @task.owner == current_user
+            return render json: { error: "Unauthorized" }, status: :forbidden
+        end
+
+        if params[:project_id].present?
+            @project = Project.find(params[:project_id])
+
+            # Ensure the task belongs to the specified project
+            unless @task.project_id == @project.id
+                return render json: { error: "Task does not belong to this project" }, status: :unprocessable_entity
+            end
+        end
+
+        if @task.destroy
+            render json: { message: "Task successfully deleted" }, status: :ok
         else
             render json: { errors: @task.errors.full_messages }, status: :unprocessable_entity
         end
@@ -53,5 +105,9 @@ class TasksController < ApplicationController
 
     def task_params
         params.require(:task).permit(:title, :description, :deadline, :project_id)
+    end
+
+    def update_task_params
+        params.require(:task).permit(:title, :description, :deadline, :done)
     end
 end

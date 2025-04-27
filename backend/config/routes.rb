@@ -8,8 +8,12 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
 
-  resources :projects
-  resources :tasks, only: [ :create ]
+  resources :projects do
+    resources :tasks, only: [ :create, :update, :destroy ]
+  end
+
+  resources :tasks, only: [ :create, :update, :destroy ]
+
   get "/tasks/inbox" => "tasks#tasks_without_deadline"
   get "/tasks/this-week" => "tasks#tasks_with_deadline_this_week"
   get "tasks/today", to: "tasks#tasks_with_deadline_today"

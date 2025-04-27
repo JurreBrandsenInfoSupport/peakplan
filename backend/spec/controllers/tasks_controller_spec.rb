@@ -134,4 +134,171 @@ describe TasksController, type: :controller do
       end
     end
   end
+
+  describe 'PATCH #update' do
+    let!(:task) { Task.create!(title: 'Original Task', description: 'Original description', done: false, deadline: 3.days.from_now, owner: 'test_user') }
+    let!(:other_user_task) { Task.create!(title: 'Other User Task', description: 'Task owned by another user', done: false, deadline: 3.days.from_now, owner: 'other_user') }
+
+    context 'with valid parameters for own task' do
+      let(:valid_params) { {
+        id: task.id,
+        task: {
+          title: 'Updated Task',
+          description: 'Updated description',
+          done: true,
+          deadline: 5.days.from_now
+        }
+      } }
+
+      it 'updates the task' do
+        patch :update, params: valid_params, format: :json
+
+        task.reload
+        expect(task.title).to eq('Updated Task')
+        expect(task.description).to eq('Updated description')
+        expect(task.done).to eq(true)
+        expect(task.deadline.to_date).to eq(5.days.from_now.to_date)
+      end
+
+      it 'returns a success status' do
+        patch :update, params: valid_params, format: :json
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context 'updating only specific fields' do
+      let(:partial_update_params) { {
+        id: task.id,
+        task: {
+          title: 'Only Update Title'
+        }
+      } }
+
+      it 'updates only the specified fields' do
+        original_description = task.description
+        original_deadline = task.deadline
+        original_done = task.done
+
+        patch :update, params: partial_update_params, format: :json
+
+        task.reload
+        expect(task.title).to eq('Only Update Title')
+        expect(task.description).to eq(original_description)
+        expect(task.deadline).to eq(original_deadline)
+        expect(task.done).to eq(original_done)
+      end
+    end
+
+    context 'with invalid parameters' do
+      let(:invalid_params) { {
+        id: task.id,
+        task: {
+          title: ''
+        }
+      } }
+
+      it 'does not update the task' do
+        original_title = task.title
+
+        patch :update, params: invalid_params, format: :json
+
+        task.reload
+        expect(task.title).to eq(original_title)
+      end
+
+      it 'returns unprocessable entity status' do
+        patch :update, params: invalid_params, format: :json
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it 'returns error messages' do
+        patch :update, params: invalid_params, format: :json
+        json_response = JSON.parse(response.body)
+        expect(json_response['errors']).to include("Title can't be blank")
+      end
+    end
+
+    context 'when attempting to update another user\'s task' do
+      let(:other_user_params) { {
+        id: other_user_task.id,
+        task: {
+          title: 'Trying to update other user task'
+        }
+      } }
+
+      it 'does not update the task' do
+        original_title = other_user_task.title
+
+        patch :update, params: other_user_params, format: :json
+
+        other_user_task.reload
+        expect(other_user_task.title).to eq(original_title)
+      end
+
+      it 'returns forbidden status' do
+        patch :update, params: other_user_params, format: :json
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+
+    context 'with non-existent task id' do
+      let(:non_existent_params) { {
+        id: 9999,
+        task: {
+          title: 'Task does not exist'
+        }
+      } }
+
+      it 'raises ActiveRecord::RecordNotFound' do
+        expect {
+          patch :update, params: non_existent_params, format: :json
+        }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+  end
+
+  describe 'DELETE #destroy' do
+    let!(:task) { Task.create!(title: 'Task to Delete', description: 'This task will be deleted', done: false, deadline: 3.days.from_now, owner: 'test_user') }
+    let!(:other_user_task) { Task.create!(title: 'Other User Task', description: 'Task owned by another user', done: false, deadline: 3.days.from_now, owner: 'other_user') }
+
+    context 'when deleting own task' do
+      it 'deletes the task' do
+        expect {
+          delete :destroy, params: { id: task.id }, format: :json
+        }.to change(Task, :count).by(-1)
+      end
+
+      it 'returns a success status' do
+        delete :destroy, params: { id: task.id }, format: :json
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'returns a success message' do
+        delete :destroy, params: { id: task.id }, format: :json
+        json_response = JSON.parse(response.body)
+        expect(json_response['message']).to eq('Task successfully deleted')
+      end
+    end
+
+    context 'when attempting to delete another user\'s task' do
+      it 'does not delete the task' do
+        expect {
+          delete :destroy, params: { id: other_user_task.id }, format: :json
+        }.not_to change(Task, :count)
+      end
+
+      it 'returns forbidden status' do
+        delete :destroy, params: { id: other_user_task.id }, format: :json
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+
+    context 'with non-existent task id' do
+      it 'raises ActiveRecord::RecordNotFound' do
+        expect {
+          delete :destroy, params: { id: 9999 }, format: :json
+        }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+  end
 end
