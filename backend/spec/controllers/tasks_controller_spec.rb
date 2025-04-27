@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 describe TasksController, type: :controller do
+  before do
+    setup_authenticated_header
+  end
+
   describe 'GET #tasks_with_deadline_today' do
     let!(:project) { Project.create!(title: 'Test Project', description: 'A sample project') }
     let!(:pending_task) { Task.create!(title: 'Pending Task', done: false, deadline: Date.today, project_id: nil) }
