@@ -7,4 +7,9 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+
+  resources :projects
+  get "/tasks/inbox" => "tasks#tasks_without_deadline"
+  get "/tasks/this-week" => "tasks#tasks_with_deadline_this_week"
+  get "tasks/for_project", to: "tasks#tasks_for_project"
 end
