@@ -6,6 +6,15 @@ class TasksController < ApplicationController
         render json: { pending: @pending_tasks, completed: @completed_tasks }
     end
 
+    def tasks_with_deadline_today
+        today = Date.today
+
+        @pending_tasks = Task.where(deadline: today, done: false).order(created_at: :desc).select(:title, :deadline, :done)
+        @completed_tasks = Task.where(deadline: today, done: true).order(created_at: :desc).select(:title, :deadline, :done)
+
+        render json: { pending: @pending_tasks, completed: @completed_tasks }
+    end
+
     def tasks_with_deadline_this_week
         start_of_week = Date.today.beginning_of_week
         end_of_week = Date.today.end_of_week

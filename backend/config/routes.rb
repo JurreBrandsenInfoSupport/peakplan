@@ -11,5 +11,6 @@ Rails.application.routes.draw do
   resources :projects
   get "/tasks/inbox" => "tasks#tasks_without_deadline"
   get "/tasks/this-week" => "tasks#tasks_with_deadline_this_week"
+  get "tasks/today", to: "tasks#tasks_with_deadline_today"
   get "tasks/for_project", to: "tasks#tasks_for_project"
 end

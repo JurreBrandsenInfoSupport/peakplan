@@ -1,10 +1,33 @@
 require 'rails_helper'
 
 describe TasksController, type: :controller do
+  describe 'GET #tasks_with_deadline_today' do
+    let!(:project) { Project.create!(title: 'Test Project', description: 'A sample project') }
+    let!(:pending_task) { Task.create!(title: 'Pending Task', done: false, deadline: Date.today, project_id: nil) }
+    let!(:completed_task) { Task.create!(title: 'Completed Task', done: true, deadline: Date.today, project_id: project.id) }
+    let!(:other_task) { Task.create!(title: 'Other Task', done: false, deadline: Date.today - 1, project_id: project.id) }
+
+    it 'returns tasks without a deadline and a project' do
+      get :tasks_with_deadline_today, format: :json
+
+      expect(response).to have_http_status(:success)
+      json_response = JSON.parse(response.body)
+
+      expect(json_response['pending'].size).to eq(1)
+      expect(json_response['pending'].first['title']).to eq('Pending Task')
+      expect(json_response['pending'].first['done']).to eq(false)
+
+      expect(json_response['completed'].size).to eq(1)
+      expect(json_response['completed'].first['title']).to eq('Completed Task')
+      expect(json_response['completed'].first['done']).to eq(true)
+    end
+  end
+
   describe 'GET #tasks_without_deadline' do
+  let!(:project) { Project.create!(title: 'Test Project', description: 'A sample project') }
     let!(:pending_task) { Task.create!(title: 'Pending Task', done: false, deadline: nil, project_id: nil) }
     let!(:completed_task) { Task.create!(title: 'Completed Task', done: true, deadline: nil, project_id: nil) }
-    let!(:other_task) { Task.create!(title: 'Other Task', done: false, deadline: Time.now, project_id: 1) }
+    let!(:other_task) { Task.create!(title: 'Other Task', done: false, deadline: Time.now, project_id: project.id) }
 
     it 'returns tasks without a deadline and a project' do
       get :tasks_without_deadline, format: :json
