@@ -2,6 +2,6 @@
     "dockerComposeFile": "docker-compose.yml",
     "service": "webapp",
     "remoteUser": "vscode",
-    "workspaceFolder": "/workspace",
+    "workspaceFolder": "/workspaces/peakplan",
     "postCreateCommand": "cd backend && bundle && cd .."
 }
