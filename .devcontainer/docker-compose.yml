@@ -4,8 +4,9 @@ services:
     image: postgres:17
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    env_file:
-      - ./.env
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
   webapp:
     container_name: webapp
     build:
@@ -15,7 +16,8 @@ services:
       - ..:/workspace:cached
     command: /bin/sh -c "while sleep 1000; do :; done"
     user: vscode
-    env_file:
-      - ./.env
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
 volumes:
   postgres_data:
