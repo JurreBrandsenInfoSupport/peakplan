@@ -3,7 +3,8 @@
     "service": "webapp",
     "remoteUser": "vscode",
     "workspaceFolder": "/workspaces/peakplan",
-    "postCreateCommand": "/bin/bash .devcontainer/postinstall.sh",
+    "postCreateCommand": "/bin/bash .devcontainer/post-create.sh",
+    "postStartCommand": "/bin/bash .devcontainer/post-start.sh",
     "features": {
         "ghcr.io/devcontainers/features/node:1": {}
     }
