@@ -5,7 +5,7 @@ class ApplicationController < ActionController::API
 
   def require_authentication
     unless valid_token
-      render json: { error: 'Unauthorized' }, status: :unauthorized
+      render json: { error: "Unauthorized" }, status: :unauthorized
     end
   end
 
@@ -14,7 +14,7 @@ class ApplicationController < ActionController::API
     return nil if header.blank?
 
     token = header.split(" ").last if header.start_with?("Bearer ")
-    
+
     begin
       decoded_token = JWT.decode(token, Rails.application.credentials.secret_key_base, true, { algorithm: "HS256" })
       decoded_token

@@ -91,4 +91,47 @@ describe TasksController, type: :controller do
       expect(json_response['completed'].first['done']).to eq(true)
     end
   end
+
+  describe 'POST #create' do
+    context 'with valid parameters' do
+      let(:valid_params) { { task: { title: 'New Task', description: 'Task description', deadline: 1.day.from_now } } }
+
+      it 'creates a new task' do
+        expect {
+          post :create, params: valid_params, format: :json
+        }.to change(Task, :count).by(1)
+      end
+
+      it 'returns a created status' do
+        post :create, params: valid_params, format: :json
+        expect(response).to have_http_status(:created)
+      end
+
+      it 'sets the current user as the owner' do
+        post :create, params: valid_params, format: :json
+        expect(Task.last.owner).to eq('test_user')
+      end
+    end
+
+    context 'with invalid parameters' do
+      let(:invalid_params) { { task: { description: 'Task without title' } } }
+
+      it 'does not create a new task' do
+        expect {
+          post :create, params: invalid_params, format: :json
+        }.not_to change(Task, :count)
+      end
+
+      it 'returns unprocessable entity status' do
+        post :create, params: invalid_params, format: :json
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it 'returns error messages' do
+        post :create, params: invalid_params, format: :json
+        json_response = JSON.parse(response.body)
+        expect(json_response['errors']).to include("Title can't be blank")
+      end
+    end
+  end
 end

@@ -37,4 +37,21 @@ class TasksController < ApplicationController
 
         render json: { pending: @pending_tasks, completed: @completed_tasks }
     end
+
+    def create
+        @task = Task.new(task_params)
+        @task.owner = current_user
+
+        if @task.save
+            render json: @task, status: :created
+        else
+            render json: { errors: @task.errors.full_messages }, status: :unprocessable_entity
+        end
+    end
+
+    private
+
+    def task_params
+        params.require(:task).permit(:title, :description, :deadline, :project_id)
+    end
 end

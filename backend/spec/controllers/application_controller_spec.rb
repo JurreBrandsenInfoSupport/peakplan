@@ -4,7 +4,7 @@ require 'jwt'
 RSpec.describe ApplicationController, type: :controller do
   controller do
     skip_before_action :require_authentication
-    
+
     def test_current_user
       render plain: current_user || 'no user'
     end
