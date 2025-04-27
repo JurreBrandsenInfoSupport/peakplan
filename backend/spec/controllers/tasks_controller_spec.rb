@@ -6,10 +6,10 @@ describe TasksController, type: :controller do
   end
 
   describe 'GET #tasks_with_deadline_today' do
-    let!(:project) { Project.create!(title: 'Test Project', description: 'A sample project') }
-    let!(:pending_task) { Task.create!(title: 'Pending Task', done: false, deadline: Date.today, project_id: nil) }
-    let!(:completed_task) { Task.create!(title: 'Completed Task', done: true, deadline: Date.today, project_id: project.id) }
-    let!(:other_task) { Task.create!(title: 'Other Task', done: false, deadline: Date.today - 1, project_id: project.id) }
+    let!(:project) { Project.create!(title: 'Test Project', description: 'A sample project', owner: "test_user") }
+    let!(:pending_task) { Task.create!(title: 'Pending Task', done: false, deadline: Date.today, project_id: nil, owner: "test_user") }
+    let!(:completed_task) { Task.create!(title: 'Completed Task', done: true, deadline: Date.today, project_id: project.id, owner: "test_user") }
+    let!(:other_task) { Task.create!(title: 'Other Task', done: false, deadline: Date.today - 1, project_id: project.id, owner: "test_user") }
 
     it 'returns tasks without a deadline and a project' do
       get :tasks_with_deadline_today, format: :json
@@ -28,10 +28,10 @@ describe TasksController, type: :controller do
   end
 
   describe 'GET #tasks_without_deadline' do
-  let!(:project) { Project.create!(title: 'Test Project', description: 'A sample project') }
-    let!(:pending_task) { Task.create!(title: 'Pending Task', done: false, deadline: nil, project_id: nil) }
-    let!(:completed_task) { Task.create!(title: 'Completed Task', done: true, deadline: nil, project_id: nil) }
-    let!(:other_task) { Task.create!(title: 'Other Task', done: false, deadline: Time.now, project_id: project.id) }
+  let!(:project) { Project.create!(title: 'Test Project', description: 'A sample project', owner: "test_user") }
+    let!(:pending_task) { Task.create!(title: 'Pending Task', done: false, deadline: nil, project_id: nil, owner: "test_user") }
+    let!(:completed_task) { Task.create!(title: 'Completed Task', done: true, deadline: nil, project_id: nil, owner: "test_user") }
+    let!(:other_task) { Task.create!(title: 'Other Task', done: false, deadline: Time.now, project_id: project.id, owner: "test_user") }
 
     it 'returns tasks without a deadline and a project' do
       get :tasks_without_deadline, format: :json
@@ -50,9 +50,9 @@ describe TasksController, type: :controller do
   end
 
   describe 'GET #tasks_with_deadline_this_week' do
-    let!(:pending_task_this_week) { Task.create!(title: 'Pending Task This Week', done: false, deadline: Date.today.beginning_of_week + 1.day) }
-    let!(:completed_task_this_week) { Task.create!(title: 'Completed Task This Week', done: true, deadline: Date.today.beginning_of_week + 2.days) }
-    let!(:task_outside_this_week) { Task.create!(title: 'Task Outside This Week', done: false, deadline: Date.today.beginning_of_week - 1.day) }
+    let!(:pending_task_this_week) { Task.create!(title: 'Pending Task This Week', done: false, deadline: Date.today.beginning_of_week + 1.day, owner: "test_user") }
+    let!(:completed_task_this_week) { Task.create!(title: 'Completed Task This Week', done: true, deadline: Date.today.beginning_of_week + 2.days, owner: "test_user") }
+    let!(:task_outside_this_week) { Task.create!(title: 'Task Outside This Week', done: false, deadline: Date.today.beginning_of_week - 1.day, owner: "test_user") }
 
     it 'returns tasks with deadlines within this week' do
       get :tasks_with_deadline_this_week, format: :json
@@ -71,10 +71,10 @@ describe TasksController, type: :controller do
   end
 
   describe 'GET #tasks_for_project' do
-    let!(:project) { Project.create!(title: 'Test Project', description: 'A sample project') }
-    let!(:pending_task) { Task.create!(title: 'Pending Task', done: false, project_id: project.id) }
-    let!(:completed_task) { Task.create!(title: 'Completed Task', done: true, project_id: project.id) }
-    let!(:other_task) { Task.create!(title: 'Other Task', done: false, project_id: nil) }
+    let!(:project) { Project.create!(title: 'Test Project', description: 'A sample project', owner: "test_user") }
+    let!(:pending_task) { Task.create!(title: 'Pending Task', done: false, project_id: project.id, owner: "test_user") }
+    let!(:completed_task) { Task.create!(title: 'Completed Task', done: true, project_id: project.id, owner: "test_user") }
+    let!(:other_task) { Task.create!(title: 'Other Task', done: false, project_id: nil, owner: "test_user") }
 
     it 'returns tasks for a specific project' do
       get :tasks_for_project, params: { project_id: project.id }, format: :json
