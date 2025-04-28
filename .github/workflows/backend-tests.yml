@@ -11,9 +11,10 @@ on:
     paths:
       - 'backend/**'
       - '.github/workflows/backend-tests.yml'
+
 jobs:
-  test:
-    name: Run Backend Tests
+  lint-and-test:
+    name: Lint and test
     runs-on: ubuntu-latest
 
     services:
@@ -44,6 +45,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      name: Checkout sources
 
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
