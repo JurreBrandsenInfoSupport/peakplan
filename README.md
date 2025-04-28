@@ -1,5 +1,9 @@
 # Peakplan - Sample application
 
+[![Frontend Tests](https://github.com/wmeints/peakplan/actions/workflows/frontend-tests.yml/badge.svg)](https://github.com/wmeints/peakplan/actions/workflows/frontend-tests.yml) 
+[![Backend Tests](https://github.com/wmeints/peakplan/actions/workflows/backend-tests.yml/badge.svg)](https://github.com/wmeints/peakplan/actions/workflows/backend-tests.yml)
+
+
 I use this application to test out how we can use AI agents to convert codebases from one language to another.
 Please follow the instructions below to edit the code in this repository.
 
