@@ -1,28 +1,32 @@
 import { ProjectSummary } from "@/lib/types";
 import useSWR from "swr";
 
-function fetcher<T>(input: RequestInfo | URL, init?: RequestInit): Promise<T> {
-  return fetch(input, init).then(async (res) => {
-    if (!res.ok) {
-      const errorData = await res.json();
-
-      throw new Error(
-        errorData.error || "An error occurred while fetching data"
-      );
+function fetchWithToken(input: RequestInfo | URL, token?: string, init?: RequestInit) {
+  return fetch(input, {
+    ...init,
+    headers: {
+      ...init?.headers,
+      "Authorization": `Bearer ${token}`
     }
-    return res.json();
+  }).then(async (res) => {
+    if (!res.ok) {
+      const error = await res.json();
+      throw new Error(error.message);
+    }
+
+    return await res.json();
   });
 }
 
-export default function useProjects() {
-  const { data, error, isLoading } = useSWR(
-    "/api/projects",
-    fetcher<ProjectSummary[]>
+export default function useProjects(token?: string) {
+  const { data, error, isLoading, mutate } = useSWR(
+    ["/api/projects", token],([url, token]) => fetchWithToken(url, token)
   );
 
   return {
     projects: data,
     isLoading,
     error,
+    mutate
   };
 }

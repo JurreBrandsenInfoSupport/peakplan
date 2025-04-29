@@ -15,6 +15,7 @@ import {
   SidebarMenuItem,
 } from "../ui/sidebar";
 import ProjectsSidebarMenu from "./projects-sidebar-menu";
+import UserDropdown from "./user-dropdown";
 
 export default function AppSidebar() {
   const projects: ProjectSummary[] = [];
@@ -61,11 +62,13 @@ export default function AppSidebar() {
             </Link>
           </SidebarGroupAction>
           <SidebarGroupContent>
-            <ProjectsSidebarMenu projects={projects} />
+            <ProjectsSidebarMenu />
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter></SidebarFooter>
+      <SidebarFooter>
+        <UserDropdown />
+      </SidebarFooter>
     </Sidebar>
   );
 }

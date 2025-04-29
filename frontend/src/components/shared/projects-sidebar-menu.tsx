@@ -8,17 +8,17 @@ import { Skeleton } from "../ui/skeleton";
 function LoadingProjects() {
   return (
     <>
-      <SidebarMenuItem className="p-2">
+      <SidebarMenuItem className="px-2">
         <SidebarMenuButton asChild>
           <Skeleton />
         </SidebarMenuButton>
       </SidebarMenuItem>
-      <SidebarMenuItem className="p-2">
+      <SidebarMenuItem className="px-2">
         <SidebarMenuButton asChild>
           <Skeleton />
         </SidebarMenuButton>
       </SidebarMenuItem>
-      <SidebarMenuItem className="p-2">
+      <SidebarMenuItem className="px-2">
         <SidebarMenuButton asChild>
           <Skeleton />
         </SidebarMenuButton>
