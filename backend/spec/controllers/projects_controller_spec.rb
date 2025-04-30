@@ -33,6 +33,46 @@ describe ProjectsController, type: :controller do
     end
   end
 
+  describe 'GET #show' do
+    let!(:user_project) { Project.create!(title: 'User Project', description: 'Project details', owner: 'test_user') }
+    let!(:other_user_project) { Project.create!(title: 'Other User Project', description: 'Project owned by another user', owner: 'other_user') }
+
+    context 'when retrieving an owned project' do
+      it 'returns the project details' do
+        get :show, params: { id: user_project.id }, format: :json
+
+        expect(response).to have_http_status(:success)
+        expect(response.content_type).to match(%r{application/json})
+
+        json_response = JSON.parse(response.body)
+        expect(json_response['id']).to eq(user_project.id)
+        expect(json_response['title']).to eq('User Project')
+        expect(json_response['description']).to eq('Project details')
+      end
+    end
+
+    context 'when trying to retrieve another user\'s project' do
+      it 'returns not found status with error message' do
+        get :show, params: { id: other_user_project.id }, format: :json
+
+        expect(response).to have_http_status(:not_found)
+        json_response = JSON.parse(response.body)
+        expect(json_response).to have_key('errors')
+        expect(json_response['errors']).to include('Project not found or not owned by you')
+      end
+    end
+
+    context 'when project does not exist' do
+      it 'returns not found status' do
+        get :show, params: { id: 9999 }, format: :json
+
+        expect(response).to have_http_status(:not_found)
+        json_response = JSON.parse(response.body)
+        expect(json_response).to have_key('errors')
+      end
+    end
+  end
+
   describe 'POST #create' do
     let(:valid_attributes) { { title: 'New Project', description: 'A new project for testing' } }
     let(:invalid_attributes) { { title: '', description: 'Missing title' } }

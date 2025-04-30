@@ -42,6 +42,16 @@ class ProjectsController < ApplicationController
     end
   end
 
+  def show
+    @project = Project.find_by(id: params[:id], owner: current_user)
+
+    if @project
+      render json: { id: @project.id, title: @project.title, description: @project.description }
+    else
+      render json: { errors: ["Project not found or not owned by you"] }, status: :not_found
+    end
+  end
+
   private
 
   def project_params
