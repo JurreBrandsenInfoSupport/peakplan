@@ -60,6 +60,16 @@ export async function fetchProjectTasks(
   );
 }
 
+export async function createProject(title: string, description: string) {
+  return await fetch(`${getApiHost()}/projects`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ title, description }),
+  }).then(processResponse<ProjectDetails>);
+}
+
 export async function createProjectTask(
   projectId: number,
   data: { title: string; description: string; deadline?: Date }
