@@ -25,10 +25,29 @@ describe TasksController, type: :controller do
       expect(json_response['completed'].first['title']).to eq('Completed Task')
       expect(json_response['completed'].first['done']).to eq(true)
     end
+    
+    it 'selects only the necessary fields' do
+      get :tasks_with_deadline_today, format: :json
+
+      json_response = JSON.parse(response.body)
+      
+      # Check that only specific fields are returned
+      expected_fields = %w[id title deadline done]
+      
+      pending_fields = json_response['pending'].first.keys
+      completed_fields = json_response['completed'].first.keys
+      
+      expect(pending_fields).to match_array(expected_fields)
+      expect(completed_fields).to match_array(expected_fields)
+      
+      # Verify description field is not included
+      expect(pending_fields).not_to include('description')
+      expect(completed_fields).not_to include('description')
+    end
   end
 
   describe 'GET #tasks_without_deadline' do
-  let!(:project) { Project.create!(title: 'Test Project', description: 'A sample project', owner: "test_user") }
+    let!(:project) { Project.create!(title: 'Test Project', description: 'A sample project', owner: "test_user") }
     let!(:pending_task) { Task.create!(title: 'Pending Task', done: false, deadline: nil, project_id: nil, owner: "test_user") }
     let!(:completed_task) { Task.create!(title: 'Completed Task', done: true, deadline: nil, project_id: nil, owner: "test_user") }
     let!(:other_task) { Task.create!(title: 'Other Task', done: false, deadline: Time.now, project_id: project.id, owner: "test_user") }
@@ -46,6 +65,25 @@ describe TasksController, type: :controller do
       expect(json_response['completed'].size).to eq(1)
       expect(json_response['completed'].first['title']).to eq('Completed Task')
       expect(json_response['completed'].first['done']).to eq(true)
+    end
+
+    it 'selects only the necessary fields' do
+      get :tasks_without_deadline, format: :json
+
+      json_response = JSON.parse(response.body)
+      
+      # Check that only specific fields are returned
+      expected_fields = %w[id title deadline done]
+      
+      pending_fields = json_response['pending'].first.keys
+      completed_fields = json_response['completed'].first.keys
+      
+      expect(pending_fields).to match_array(expected_fields)
+      expect(completed_fields).to match_array(expected_fields)
+      
+      # Verify description field is not included
+      expect(pending_fields).not_to include('description')
+      expect(completed_fields).not_to include('description')
     end
   end
 
@@ -68,6 +106,25 @@ describe TasksController, type: :controller do
       expect(json_response['completed'].first['title']).to eq('Completed Task This Week')
       expect(json_response['completed'].first['done']).to eq(true)
     end
+    
+    it 'selects only the necessary fields' do
+      get :tasks_with_deadline_this_week, format: :json
+
+      json_response = JSON.parse(response.body)
+      
+      # Check that only specific fields are returned
+      expected_fields = %w[id title deadline done]
+      
+      pending_fields = json_response['pending'].first.keys
+      completed_fields = json_response['completed'].first.keys
+      
+      expect(pending_fields).to match_array(expected_fields)
+      expect(completed_fields).to match_array(expected_fields)
+      
+      # Verify description field is not included
+      expect(pending_fields).not_to include('description')
+      expect(completed_fields).not_to include('description')
+    end
   end
 
   describe 'GET #tasks_for_project' do
@@ -89,6 +146,25 @@ describe TasksController, type: :controller do
       expect(json_response['completed'].size).to eq(1)
       expect(json_response['completed'].first['title']).to eq('Completed Task')
       expect(json_response['completed'].first['done']).to eq(true)
+    end
+    
+    it 'selects only the necessary fields' do
+      get :tasks_for_project, params: { project_id: project.id }, format: :json
+
+      json_response = JSON.parse(response.body)
+      
+      # Check that only specific fields are returned
+      expected_fields = %w[id title deadline done]
+      
+      pending_fields = json_response['pending'].first.keys
+      completed_fields = json_response['completed'].first.keys
+      
+      expect(pending_fields).to match_array(expected_fields)
+      expect(completed_fields).to match_array(expected_fields)
+      
+      # Verify description field is not included
+      expect(pending_fields).not_to include('description')
+      expect(completed_fields).not_to include('description')
     end
   end
 
