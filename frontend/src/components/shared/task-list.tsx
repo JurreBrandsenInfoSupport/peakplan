@@ -113,13 +113,13 @@ export default function TaskList(props: TaskListProps) {
           Hurray, no pending tasks
         </div>
       )}
-      <Collapsible open={showCreateTask} onOpenChange={setShowCreateTask}>
+      <Collapsible open={showCreateTask} onOpenChange={setShowCreateTask} className="mt-4">
         <CollapsibleTrigger asChild>
           <Button variant="ghost" className="w-full flex flex-row">
             <Plus /> Add new task
           </Button>
         </CollapsibleTrigger>
-        <CollapsibleContent>
+        <CollapsibleContent className="mt-4">
           <CreateTaskForm onCreateTask={handleCreateTask} />
         </CollapsibleContent>
       </Collapsible>

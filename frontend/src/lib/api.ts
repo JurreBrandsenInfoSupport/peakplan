@@ -60,6 +60,12 @@ export async function fetchProjectTasks(
   );
 }
 
+export async function fetchInboxTasks() {
+  return fetch(`${getApiHost()}/tasks/inbox`).then(
+    processResponse<TaskListData>
+  );
+}
+
 export async function createProject(title: string, description: string) {
   return await fetch(`${getApiHost()}/projects`, {
     method: "POST",
@@ -87,6 +93,16 @@ export async function updateTaskStatus(taskId: number, done: boolean) {
   return fetch(`${getApiHost()}/tasks/${taskId}`, {
     method: "PATCH",
     body: JSON.stringify({ done }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+}
+
+export async function createTask({ title, description, deadline }: { title: string, description: string, deadline?: Date }) {
+  return fetch(`${getApiHost()}/tasks`, {
+    method: "POST",
+    body: JSON.stringify({ title, description, deadline }),
     headers: {
       "Content-Type": "application/json",
     },
