@@ -66,6 +66,12 @@ export async function fetchInboxTasks() {
   );
 }
 
+export async function fetchTodaysTasks() {
+  return fetch(`${getApiHost()}/tasks/today`).then(
+    processResponse<TaskListData>
+  );
+}
+
 export async function createProject(title: string, description: string) {
   return await fetch(`${getApiHost()}/projects`, {
     method: "POST",
