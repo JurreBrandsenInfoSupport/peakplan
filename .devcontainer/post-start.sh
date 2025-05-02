@@ -5,4 +5,4 @@
 
 # Restore the packages
 pushd /workspaces/peakplan/backend && bundle && popd
-pushd /workspaces/peakplan/frontend && npm install && popd
+pushd /workspaces/peakplan/frontend && npm install --force && popd
