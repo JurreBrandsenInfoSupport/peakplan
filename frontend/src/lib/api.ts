@@ -72,6 +72,12 @@ export async function fetchTodaysTasks() {
   );
 }
 
+export async function fetchWeeklyTasks() {
+  return fetch(`${getApiHost()}/tasks/this-week`).then(
+    processResponse<TaskListData>,
+  );
+}
+
 export async function createProject(title: string, description: string) {
   return await fetch(`${getApiHost()}/projects`, {
     method: "POST",
