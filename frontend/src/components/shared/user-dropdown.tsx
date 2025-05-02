@@ -2,7 +2,6 @@
 
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ChevronUp, User2 } from "lucide-react";
-import Link from "next/link";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -37,7 +36,7 @@ export default function UserDropdown() {
             align="end"
             sideOffset={4}
           >
-            <DropdownMenuItem onClick ={handleSettingsClick}>
+            <DropdownMenuItem onClick={handleSettingsClick}>
               Settings
             </DropdownMenuItem>
           </DropdownMenuContent>

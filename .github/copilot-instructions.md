@@ -38,7 +38,7 @@
 7. **Testing**: Write unit tests using vitest and integration tests with React Testing Library.
     * Place the tests side-by-side with the source files.
     * Use describe, it, expect from vitest when writing tests.
-    * Mock the bare minimum needed to run a test.
+    * Use real implementations of external components instead of mocking
 8. **Code Splitting**: Use dynamic imports to optimize performance and reduce initial load time.
 9. **Accessibility**: Follow web accessibility standards (WCAG) and use tools like Axe for testing.
 10. **Linting and Formatting**: Use ESLint and Prettier to maintain consistent code style and quality.

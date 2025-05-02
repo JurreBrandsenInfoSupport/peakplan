@@ -1,4 +1,3 @@
-import { ProjectSummary } from "@/lib/types";
 import { Calendar1, CalendarClock, Inbox, Plus } from "lucide-react";
 import Link from "next/link";
 import {
@@ -18,8 +17,6 @@ import ProjectsSidebarMenu from "./projects-sidebar-menu";
 import UserDropdown from "./user-dropdown";
 
 export default function AppSidebar() {
-  const projects: ProjectSummary[] = [];
-
   return (
     <Sidebar>
       <SidebarHeader className="border-b">
