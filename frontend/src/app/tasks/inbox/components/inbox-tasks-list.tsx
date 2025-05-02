@@ -20,7 +20,7 @@ export default function InboxTasksList() {
   async function handleCreateTask(
     title: string,
     description: string,
-    deadline?: Date
+    deadline?: Date,
   ) {
     await createTask({ title, description, deadline });
     mutate();

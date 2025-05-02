@@ -18,7 +18,7 @@ interface TaskListProps {
   onCreateTask: (
     title: string,
     description: string,
-    deadline?: Date
+    deadline?: Date,
   ) => Promise<void>;
   onMarkTaskCompleted: (taskId: number) => Promise<void>;
   onMarkTaskPending: (taskId: number) => Promise<void>;
@@ -113,7 +113,11 @@ export default function TaskList(props: TaskListProps) {
           Hurray, no pending tasks
         </div>
       )}
-      <Collapsible open={showCreateTask} onOpenChange={setShowCreateTask} className="mt-4">
+      <Collapsible
+        open={showCreateTask}
+        onOpenChange={setShowCreateTask}
+        className="mt-4"
+      >
         <CollapsibleTrigger asChild>
           <Button variant="ghost" className="w-full flex flex-row">
             <Plus /> Add new task

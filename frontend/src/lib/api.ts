@@ -33,7 +33,7 @@ async function processResponse<T>(response: Response): Promise<T> {
     const errorText = await response.text();
     throw new ApiError(
       `Error: ${response.status} ${response.statusText} - ${errorText}`,
-      response.status
+      response.status,
     );
   }
 
@@ -42,33 +42,33 @@ async function processResponse<T>(response: Response): Promise<T> {
 
 export async function fetchProject(id: string): Promise<ProjectDetails> {
   return fetch(`${getApiHost()}/projects/${id}`).then(
-    processResponse<ProjectDetails>
+    processResponse<ProjectDetails>,
   );
 }
 
 export async function fetchProjects(): Promise<ProjectSummary[]> {
   return fetch(`${getApiHost()}/projects`).then(
-    processResponse<ProjectSummary[]>
+    processResponse<ProjectSummary[]>,
   );
 }
 
 export async function fetchProjectTasks(
-  projectId: number
+  projectId: number,
 ): Promise<TaskListData> {
   return fetch(`${getApiHost()}/projects/${projectId}/tasks`).then(
-    processResponse<TaskListData>
+    processResponse<TaskListData>,
   );
 }
 
 export async function fetchInboxTasks() {
   return fetch(`${getApiHost()}/tasks/inbox`).then(
-    processResponse<TaskListData>
+    processResponse<TaskListData>,
   );
 }
 
 export async function fetchTodaysTasks() {
   return fetch(`${getApiHost()}/tasks/today`).then(
-    processResponse<TaskListData>
+    processResponse<TaskListData>,
   );
 }
 
@@ -84,7 +84,7 @@ export async function createProject(title: string, description: string) {
 
 export async function createProjectTask(
   projectId: number,
-  data: { title: string; description: string; deadline?: Date }
+  data: { title: string; description: string; deadline?: Date },
 ) {
   return fetch(`${getApiHost()}/projects/${projectId}/tasks`, {
     method: "POST",
@@ -105,7 +105,15 @@ export async function updateTaskStatus(taskId: number, done: boolean) {
   });
 }
 
-export async function createTask({ title, description, deadline }: { title: string, description: string, deadline?: Date }) {
+export async function createTask({
+  title,
+  description,
+  deadline,
+}: {
+  title: string;
+  description: string;
+  deadline?: Date;
+}) {
   return fetch(`${getApiHost()}/tasks`, {
     method: "POST",
     body: JSON.stringify({ title, description, deadline }),

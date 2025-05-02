@@ -24,7 +24,7 @@ export default function ProjectTasksList({ projectId }: ProjectTasksListProps) {
   async function createTask(
     title: string,
     description: string,
-    deadline?: Date
+    deadline?: Date,
   ) {
     await createProjectTask(projectId, { title, description, deadline });
     mutate();
