@@ -20,7 +20,9 @@ export default function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader className="border-b">
-        <h1 className="p-2 font-semibold text-xl">Peakplan</h1>
+        <Link href="/" className="block p-2">
+          <h1 className="font-semibold text-xl">Peakplan</h1>
+        </Link>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
