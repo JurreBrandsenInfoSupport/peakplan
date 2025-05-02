@@ -48,7 +48,7 @@ class ProjectsController < ApplicationController
     if @project
       render json: { id: @project.id, title: @project.title, description: @project.description }
     else
-      render json: { errors: ["Project not found or not owned by you"] }, status: :not_found
+      render json: { errors: [ "Project not found or not owned by you" ] }, status: :not_found
     end
   end
 
