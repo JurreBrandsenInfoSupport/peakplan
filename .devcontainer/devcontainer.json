@@ -2,7 +2,7 @@
     "dockerComposeFile": "docker-compose.yml",
     "service": "webapp",
     "remoteUser": "vscode",
-    "workspaceFolder": "/workspaces/peakplan",
+    "workspaceFolder": "/workspace",
     "postCreateCommand": "/bin/bash .devcontainer/post-create.sh",
     "postStartCommand": "/bin/bash .devcontainer/post-start.sh",
     "features": {

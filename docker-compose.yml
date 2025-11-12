@@ -1,0 +1,65 @@
+services:
+  database:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: peakplan
+      POSTGRES_PASSWORD: peakplan
+      POSTGRES_DB: backend_development
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U peakplan"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      POSTGRES_USER: peakplan
+      POSTGRES_PASSWORD: peakplan
+      POSTGRES_HOST: database
+      RAILS_ENV: development
+      RAILS_MAX_THREADS: 5
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend:/app
+      - backend_bundle:/usr/local/bundle
+    depends_on:
+      database:
+        condition: service_healthy
+    command: >
+      bash -c "
+        find bin -type f -exec dos2unix {} + &&
+        bundle install &&
+        rm -f tmp/pids/server.pid &&
+        bin/rails db:create || true &&
+        bin/rails db:migrate &&
+        bin/rails server -b 0.0.0.0
+      "
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    environment:
+      NODE_ENV: development
+      DOCKER_ENV: true
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      - backend
+    command: npm run dev
+
+volumes:
+  postgres_data:
+  backend_bundle:

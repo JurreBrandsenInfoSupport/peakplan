@@ -1,8 +1,10 @@
 #!/bin/bash
 
-# Load the node version manager scripts automatically
+# Load Node Version Manager and install latest LTS
 . ${NVM_DIR}/nvm.sh && nvm install --lts
 
-# Restore the packages
-pushd /workspaces/peakplan/backend && bundle && popd
-pushd /workspaces/peakplan/frontend && npm install --force && popd
+# Restore packages for backend
+pushd /workspace/backend && bundle install && popd
+
+# Restore packages for frontend
+pushd /workspace/frontend && npm install --force && popd

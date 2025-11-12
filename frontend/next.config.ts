@@ -5,7 +5,9 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/api/:path*",
-        destination: "http://localhost:3000/:path*",
+        destination: process.env.NODE_ENV === "development" && process.env.DOCKER_ENV
+          ? "http://backend:3000/:path*"
+          : "http://localhost:3000/:path*",
       },
     ];
   },

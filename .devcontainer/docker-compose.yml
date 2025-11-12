@@ -2,22 +2,53 @@ services:
   database:
     container_name: database
     image: postgres:17
+    restart: always
+    ports:
+      - "5432:5432"   # expose database to host (optional, for debugging / psql)
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-  webapp:
-    container_name: webapp
+      POSTGRES_DB: app_db
+
+  backend:
+    container_name: backend
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
     volumes:
       - ..:/workspace:cached
-    command: /bin/sh -c "while sleep 1000; do :; done"
-    user: vscode
+    working_dir: /workspace/backend
+    command: bash -c "bundle install && rails db:create && rails db:migrate && rails server -b 0.0.0.0 -p 3000"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - database
     environment:
+      DATABASE_HOST: database
+      DATABASE_PORT: 5432
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: app_db
+      RAILS_ENV: development
+
+  frontend:
+    container_name: frontend
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+      - ..:/workspace:cached
+    working_dir: /workspace/frontend
+    command: bash -c "npm install && npm run dev -- --hostname 0.0.0.0 --port 3000"
+    ports:
+      - "3001:3000"
+    depends_on:
+      - backend
+    environment:
+      NODE_ENV: development
+      DOCKER_ENV: "true"
+
 volumes:
   postgres_data:

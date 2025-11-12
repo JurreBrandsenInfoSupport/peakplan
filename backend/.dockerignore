@@ -1,0 +1,8 @@
+log/*
+tmp/*
+.git
+.gitignore
+*.md
+coverage
+vendor/bundle
+.bundle
